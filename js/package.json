@@ -1,0 +1,37 @@
+{
+  "name": "meta-notation",
+  "version": "0.1.0",
+  "description": "A notation for the largest possible set of languages, focusing on parsing common delimiters",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build:grammar": "peggy --format es src/meta.grammar.pegjs",
+    "build:ts": "tsc",
+    "build:copy": "cp src/meta.grammar.js dist/src/meta.grammar.js",
+    "build": "npm run build:grammar && npm run build:ts && npm run build:copy",
+    "test": "node --test dist/tests/languages.test.js dist/tests/natural-languages.test.js dist/tests/parser.test.js dist/tests/serializer.test.js",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "parser",
+    "notation",
+    "meta",
+    "delimiters",
+    "metalanguage"
+  ],
+  "author": "",
+  "license": "Unlicense",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "peggy": "^4.0.0",
+    "typescript": "^5.3.0"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "dependencies": {
+    "test-anywhere": "^0.6.0"
+  }
+}
