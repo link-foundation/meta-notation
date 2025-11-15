@@ -10,34 +10,60 @@ It supports plain sequences of references and nested structures, but **without**
 
 The implementation is similar to the concepts in [metalanguage](https://github.com/konard/metalanguage), but leverages all the tools from links-notation to do it right and efficiently.
 
+## Implementations
+
+Meta-notation is available in multiple languages:
+
+- **[JavaScript/TypeScript](./js)** - Full-featured implementation with PEG.js grammar
+- **[Rust](./rust)** - High-performance implementation with serde support
+
 ## Features
 
 - **Universal Delimiter Parsing**: Parses `()`, `{}`, `[]`, `''`, `""`, `` ` ` ``
 - **Language Agnostic**: Works with 25+ programming languages and all natural languages
 - **Nested Structures**: Supports arbitrary nesting of delimiters
 - **Round-trip Serialization**: Parse and serialize back to original text
-- **TypeScript Support**: Fully typed API
-- **Simple Grammar**: PEG.js-based grammar for efficient parsing
-- **81 Test Cases**: Comprehensive test coverage for programming and natural languages
+- **Multiple Language Implementations**: JavaScript/TypeScript and Rust
+- **Simple Grammar**: Clean, efficient parsing
+- **Comprehensive Tests**: 81+ test cases for programming and natural languages
 
 ## Installation
+
+### JavaScript/TypeScript
 
 ```bash
 npm install meta-notation
 ```
 
+### Rust
+
+```toml
+[dependencies]
+meta-notation = "0.1"
+```
+
 ## Quick Start
+
+### JavaScript/TypeScript
 
 ```typescript
 import { parse, serialize } from 'meta-notation';
 
-// Parse code with delimiters
 const code = 'function test() { return "hello"; }';
 const parsed = parse(code);
-
-// Serialize back to string
 const serialized = serialize(parsed);
 console.log(serialized === code); // true
+```
+
+### Rust
+
+```rust
+use meta_notation::{parse, serialize};
+
+let code = r#"function test() { return "hello"; }"#;
+let parsed = parse(code);
+let serialized = serialize(&parsed);
+assert_eq!(serialized, code);
 ```
 
 ## API
@@ -135,15 +161,35 @@ See the [examples](./src/examples) directory for more detailed usage examples.
 
 ## Building
 
+### JavaScript/TypeScript
+
 ```bash
+cd js
 npm install
 npm run build
 ```
 
-## Testing
+### Rust
 
 ```bash
+cd rust
+cargo build --release
+```
+
+## Testing
+
+### JavaScript/TypeScript
+
+```bash
+cd js
 npm test
+```
+
+### Rust
+
+```bash
+cd rust
+cargo test
 ```
 
 ## Comparison with Links-Notation

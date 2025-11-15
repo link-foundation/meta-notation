@@ -1,11 +1,15 @@
 # Build outputs
-dist/
-src/**/*.js
-src/**/*.js.map
-src/**/*.d.ts
-src/**/*.d.ts.map
-!src/**/*.test.ts
-!src/**/*.spec.ts
+js/dist/
+js/src/**/*.js
+js/src/**/*.js.map
+js/src/**/*.d.ts
+js/src/**/*.d.ts.map
+!js/src/**/*.test.ts
+!js/src/**/*.spec.ts
+
+# Rust build outputs
+rust/target/
+rust/Cargo.lock
 
 # Logs
 logs
