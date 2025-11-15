@@ -10,7 +10,7 @@
     "build:ts": "tsc",
     "build:copy": "cp src/meta.grammar.js dist/src/meta.grammar.js",
     "build": "npm run build:grammar && npm run build:ts && npm run build:copy",
-    "test": "node --test dist/tests/*.test.js",
+    "test": "node --test dist/tests/languages.test.js dist/tests/natural-languages.test.js dist/tests/parser.test.js dist/tests/serializer.test.js",
     "prepare": "npm run build"
   },
   "keywords": [
