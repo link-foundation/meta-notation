@@ -4,12 +4,15 @@ js/src/**/*.js
 js/src/**/*.js.map
 js/src/**/*.d.ts
 js/src/**/*.d.ts.map
+!js/src/meta.grammar.d.ts
 !js/src/**/*.test.ts
 !js/src/**/*.spec.ts
 
 # Rust build outputs
 rust/target/
 rust/Cargo.lock
+target/
+Cargo.lock
 
 # Logs
 logs

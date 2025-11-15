@@ -8,7 +8,7 @@
   "scripts": {
     "build:grammar": "peggy --format es src/meta.grammar.pegjs",
     "build:ts": "tsc",
-    "build:copy": "cp src/meta.grammar.js dist/src/meta.grammar.js && cp src/meta.grammar.d.ts dist/src/meta.grammar.d.ts",
+    "build:copy": "cp src/meta.grammar.js dist/src/meta.grammar.js",
     "build": "npm run build:grammar && npm run build:ts && npm run build:copy",
     "test": "node --test dist/**/*.test.js",
     "prepare": "npm run build"
