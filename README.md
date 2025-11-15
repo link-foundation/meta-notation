@@ -160,4 +160,4 @@ By removing the `:` self-reference syntax, meta-notation can parse a wider varie
 
 ## License
 
-MIT
+[Unlicense](https://github.com/link-foundation/meta-notation/blob/main/LICENSE) (Public Domain)

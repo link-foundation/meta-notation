@@ -21,7 +21,7 @@
     "metalanguage"
   ],
   "author": "",
-  "license": "MIT",
+  "license": "Unlicense",
   "devDependencies": {
     "@types/node": "^20.10.0",
     "peggy": "^4.0.0",
