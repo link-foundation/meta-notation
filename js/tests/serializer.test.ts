@@ -2,15 +2,14 @@
  * Tests for the meta-notation serializer
  */
 
-import { test } from 'node:test';
-import assert from 'node:assert';
-import { parse } from './parser.js';
-import { serialize } from './serializer.js';
+import { test, assert } from 'test-anywhere';
+import { parse } from '../src/parser.js';
+import { serialize } from '../src/serializer.js';
 
 test('serialize plain text', () => {
   const blocks = [{ type: 'text' as const, content: 'hello world' }];
   const result = serialize(blocks);
-  assert.strictEqual(result, 'hello world');
+  assert.equal(result, 'hello world');
 });
 
 test('serialize parentheses', () => {
@@ -18,7 +17,7 @@ test('serialize parentheses', () => {
     { type: 'paren' as const, content: [{ type: 'text' as const, content: 'hello' }] }
   ];
   const result = serialize(blocks);
-  assert.strictEqual(result, '(hello)');
+  assert.equal(result, '(hello)');
 });
 
 test('serialize curly braces', () => {
@@ -26,7 +25,7 @@ test('serialize curly braces', () => {
     { type: 'curly' as const, content: [{ type: 'text' as const, content: 'world' }] }
   ];
   const result = serialize(blocks);
-  assert.strictEqual(result, '{world}');
+  assert.equal(result, '{world}');
 });
 
 test('serialize square brackets', () => {
@@ -34,7 +33,7 @@ test('serialize square brackets', () => {
     { type: 'square' as const, content: [{ type: 'text' as const, content: 'test' }] }
   ];
   const result = serialize(blocks);
-  assert.strictEqual(result, '[test]');
+  assert.equal(result, '[test]');
 });
 
 test('serialize quotes', () => {
@@ -44,7 +43,7 @@ test('serialize quotes', () => {
     { type: 'doubleQuote' as const, content: 'world' }
   ];
   const result = serialize(blocks);
-  assert.strictEqual(result, `'hello' "world"`);
+  assert.equal(result, `'hello' "world"`);
 });
 
 test('serialize backticks', () => {
@@ -52,33 +51,33 @@ test('serialize backticks', () => {
     { type: 'backtick' as const, content: 'code' }
   ];
   const result = serialize(blocks);
-  assert.strictEqual(result, '`code`');
+  assert.equal(result, '`code`');
 });
 
 test('round-trip: parse then serialize', () => {
   const original = 'hello (world) {test} [array] "string" `code`';
   const parsed = parse(original);
   const serialized = serialize(parsed);
-  assert.strictEqual(serialized, original);
+  assert.equal(serialized, original);
 });
 
 test('round-trip: nested structures', () => {
   const original = '{a [b (c) d] e}';
   const parsed = parse(original);
   const serialized = serialize(parsed);
-  assert.strictEqual(serialized, original);
+  assert.equal(serialized, original);
 });
 
 test('round-trip: empty delimiters', () => {
   const original = '(){}[]';
   const parsed = parse(original);
   const serialized = serialize(parsed);
-  assert.strictEqual(serialized, original);
+  assert.equal(serialized, original);
 });
 
 test('round-trip: complex code', () => {
   const original = 'function test() { return "hello"; }';
   const parsed = parse(original);
   const serialized = serialize(parsed);
-  assert.strictEqual(serialized, original);
+  assert.equal(serialized, original);
 });

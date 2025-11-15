@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "description": "A notation for the largest possible set of languages, focusing on parsing common delimiters",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
     "build:grammar": "peggy --format es src/meta.grammar.pegjs",
     "build:ts": "tsc",
-    "build:copy": "cp src/meta.grammar.js dist/meta.grammar.js && cp src/meta.grammar.d.ts dist/meta.grammar.d.ts",
+    "build:copy": "cp src/meta.grammar.js dist/src/meta.grammar.js && cp src/meta.grammar.d.ts dist/src/meta.grammar.d.ts",
     "build": "npm run build:grammar && npm run build:ts && npm run build:copy",
     "test": "node --test dist/**/*.test.js",
     "prepare": "npm run build"
@@ -30,5 +30,8 @@
   "files": [
     "dist",
     "src"
-  ]
+  ],
+  "dependencies": {
+    "test-anywhere": "^0.6.0"
+  }
 }
