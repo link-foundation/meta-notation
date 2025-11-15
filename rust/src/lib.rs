@@ -111,12 +111,12 @@ impl<'a> Parser<'a> {
     /// Parse a single block
     fn parse_block(&mut self) -> Option<Block> {
         match self.peek()? {
-            '(' => self.parse_delimited('(', ')', |blocks| Block::Paren(blocks)),
-            '{' => self.parse_delimited('{', '}', |blocks| Block::Curly(blocks)),
-            '[' => self.parse_delimited('[', ']', |blocks| Block::Square(blocks)),
-            '\'' => self.parse_quote('\'', |s| Block::SingleQuote(s)),
-            '"' => self.parse_quote('"', |s| Block::DoubleQuote(s)),
-            '`' => self.parse_quote('`', |s| Block::Backtick(s)),
+            '(' => self.parse_delimited('(', ')', Block::Paren),
+            '{' => self.parse_delimited('{', '}', Block::Curly),
+            '[' => self.parse_delimited('[', ']', Block::Square),
+            '\'' => self.parse_quote('\'', Block::SingleQuote),
+            '"' => self.parse_quote('"', Block::DoubleQuote),
+            '`' => self.parse_quote('`', Block::Backtick),
             ')' | '}' | ']' => {
                 // Unmatched closing delimiter - treat as text
                 let c = self.consume()?;
@@ -234,7 +234,7 @@ pub fn parse(input: &str) -> Vec<Block> {
 /// assert_eq!(serialized, text);
 /// ```
 pub fn serialize(blocks: &[Block]) -> String {
-    blocks.iter().map(|b| serialize_block(b)).collect()
+    blocks.iter().map(serialize_block).collect()
 }
 
 /// Serialize a single block

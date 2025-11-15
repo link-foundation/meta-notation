@@ -39,7 +39,10 @@ fn test_parse_english_text_with_brackets() {
 fn test_parse_english_dialogue() {
     let text = r#""How are you?" she asked. "I'm fine," he replied."#;
     let result = parse(text);
-    let quote_count = result.iter().filter(|b| b.delimiter_type() == DelimiterType::DoubleQuote).count();
+    let quote_count = result
+        .iter()
+        .filter(|b| b.delimiter_type() == DelimiterType::DoubleQuote)
+        .count();
     assert_eq!(quote_count, 2);
     assert_eq!(serialize(&result), text);
 }
@@ -222,7 +225,8 @@ fn test_parse_recipe_text() {
 
 #[test]
 fn test_parse_technical_documentation() {
-    let text = "The function `process` accepts parameters [x, y] and returns an object {status, data}.";
+    let text =
+        "The function `process` accepts parameters [x, y] and returns an object {status, data}.";
     let result = parse(text);
     assert!(has_delimiter_type(&result, &DelimiterType::Backtick));
     assert!(has_delimiter_type(&result, &DelimiterType::Square));
@@ -244,7 +248,10 @@ fn test_parse_mixed_natural_language_and_code() {
 fn test_parse_song_lyrics_with_notes() {
     let text = r#""Imagine" (by John Lennon) says "You may say I'm a dreamer.""#;
     let result = parse(text);
-    let quote_count = result.iter().filter(|b| b.delimiter_type() == DelimiterType::DoubleQuote).count();
+    let quote_count = result
+        .iter()
+        .filter(|b| b.delimiter_type() == DelimiterType::DoubleQuote)
+        .count();
     assert_eq!(quote_count, 2);
     assert!(has_delimiter_type(&result, &DelimiterType::Paren));
     assert_eq!(serialize(&result), text);

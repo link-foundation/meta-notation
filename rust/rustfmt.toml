@@ -1,0 +1,23 @@
+edition = "2021"
+
+# Formatting settings
+max_width = 100
+hard_tabs = false
+tab_spaces = 4
+newline_style = "Auto"
+
+# Import settings
+reorder_imports = true
+reorder_modules = true
+
+# Match style
+match_block_trailing_comma = false
+
+# Use field init shorthand
+use_field_init_shorthand = true
+
+# Chain width
+chain_width = 60
+
+# Function call width
+fn_call_width = 80

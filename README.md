@@ -1,5 +1,10 @@
 # meta-notation
 
+[![CI/CD](https://github.com/link-foundation/meta-notation/actions/workflows/ci.yml/badge.svg)](https://github.com/link-foundation/meta-notation/actions/workflows/ci.yml)
+[![npm version](https://badge.fury.io/js/meta-notation.svg)](https://www.npmjs.com/package/meta-notation)
+[![crates.io](https://img.shields.io/crates/v/meta-notation.svg)](https://crates.io/crates/meta-notation)
+[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](https://github.com/link-foundation/meta-notation/blob/main/LICENSE)
+
 A notation for the largest possible set of languages. It focuses on parsing common delimiters: `()`, `{}`, `[]`, `''`, `` ` ` ``, `""` and so on.
 
 ## Vision

@@ -73,7 +73,8 @@ fn test_parse_java_code() {
 
 #[test]
 fn test_parse_csharp_code() {
-    let code = r#"public void Test() { var list = new List<int> {1, 2, 3}; Console.WriteLine("Done"); }"#;
+    let code =
+        r#"public void Test() { var list = new List<int> {1, 2, 3}; Console.WriteLine("Done"); }"#;
     let result = parse(code);
     assert!(has_delimiter_type(&result, &DelimiterType::Paren));
     assert!(has_delimiter_type(&result, &DelimiterType::Curly));
