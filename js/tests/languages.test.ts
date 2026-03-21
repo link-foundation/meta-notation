@@ -26,7 +26,20 @@ function hasDelimiterType(sequence: Sequence, type: DelimiterType): boolean {
 test('parse JavaScript code', () => {
   const code = 'const greet = (name) => { return `Hello, ${name}!`; };';
   const result = parse(code);
-  assert.ok(result.length > 0);
+
+  // Verify exact parsed structure
+  assert.deepEqual(result, [
+    { type: 'text', content: 'const greet = ' },
+    { type: 'paren', content: [{ type: 'text', content: 'name' }] },
+    { type: 'text', content: ' => ' },
+    { type: 'curly', content: [
+      { type: 'text', content: ' return ' },
+      { type: 'backtick', content: 'Hello, ${name}!' },
+      { type: 'text', content: '; ' },
+    ]},
+    { type: 'text', content: ';' },
+  ]);
+
   assert.ok(hasDelimiterType(result, 'paren'));
   assert.ok(hasDelimiterType(result, 'curly'));
   assert.ok(hasDelimiterType(result, 'backtick'));
@@ -38,6 +51,21 @@ test('parse JavaScript code', () => {
 test('parse Python code', () => {
   const code = 'def calculate(x, y): return {"sum": x + y, "list": [x, y]}';
   const result = parse(code);
+
+  // Verify exact parsed structure
+  assert.deepEqual(result, [
+    { type: 'text', content: 'def calculate' },
+    { type: 'paren', content: [{ type: 'text', content: 'x, y' }] },
+    { type: 'text', content: ': return ' },
+    { type: 'curly', content: [
+      { type: 'doubleQuote', content: 'sum' },
+      { type: 'text', content: ': x + y, ' },
+      { type: 'doubleQuote', content: 'list' },
+      { type: 'text', content: ': ' },
+      { type: 'square', content: [{ type: 'text', content: 'x, y' }] },
+    ]},
+  ]);
+
   assert.ok(hasDelimiterType(result, 'paren'));
   assert.ok(hasDelimiterType(result, 'curly'));
   assert.ok(hasDelimiterType(result, 'square'));
@@ -49,6 +77,19 @@ test('parse Python code', () => {
 test('parse Go code', () => {
   const code = 'func main() { fmt.Println("Hello, World!") }';
   const result = parse(code);
+
+  // Verify exact parsed structure
+  assert.deepEqual(result, [
+    { type: 'text', content: 'func main' },
+    { type: 'paren', content: [] },
+    { type: 'text', content: ' ' },
+    { type: 'curly', content: [
+      { type: 'text', content: ' fmt.Println' },
+      { type: 'paren', content: [{ type: 'doubleQuote', content: 'Hello, World!' }] },
+      { type: 'text', content: ' ' },
+    ]},
+  ]);
+
   assert.ok(hasDelimiterType(result, 'paren'));
   assert.ok(hasDelimiterType(result, 'curly'));
   assert.ok(hasDelimiterType(result, 'doubleQuote'));
@@ -239,6 +280,26 @@ test('parse SQL code', () => {
 test('parse JSON', () => {
   const code = '{"name": "John", "age": 30, "tags": ["developer", "designer"]}';
   const result = parse(code);
+
+  // Verify exact parsed structure
+  assert.deepEqual(result, [
+    { type: 'curly', content: [
+      { type: 'doubleQuote', content: 'name' },
+      { type: 'text', content: ': ' },
+      { type: 'doubleQuote', content: 'John' },
+      { type: 'text', content: ', ' },
+      { type: 'doubleQuote', content: 'age' },
+      { type: 'text', content: ': 30, ' },
+      { type: 'doubleQuote', content: 'tags' },
+      { type: 'text', content: ': ' },
+      { type: 'square', content: [
+        { type: 'doubleQuote', content: 'developer' },
+        { type: 'text', content: ', ' },
+        { type: 'doubleQuote', content: 'designer' },
+      ]},
+    ]},
+  ]);
+
   assert.ok(hasDelimiterType(result, 'curly'));
   assert.ok(hasDelimiterType(result, 'square'));
   assert.ok(hasDelimiterType(result, 'doubleQuote'));

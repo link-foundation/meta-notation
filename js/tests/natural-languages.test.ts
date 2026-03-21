@@ -30,6 +30,14 @@ function hasDelimiterType(sequence: Sequence, type: DelimiterType): boolean {
 test('parse English text with quotes', () => {
   const text = 'She said, "Hello, world!" and smiled.';
   const result = parse(text);
+
+  // Verify exact parsed structure
+  assert.deepEqual(result, [
+    { type: 'text', content: 'She said, ' },
+    { type: 'doubleQuote', content: 'Hello, world!' },
+    { type: 'text', content: ' and smiled.' },
+  ]);
+
   assert.ok(hasDelimiterType(result, 'doubleQuote'));
   assert.equal(serialize(result), text);
 });
@@ -37,6 +45,14 @@ test('parse English text with quotes', () => {
 test('parse English text with parentheses', () => {
   const text = 'The conference (scheduled for next week) will be online.';
   const result = parse(text);
+
+  // Verify exact parsed structure
+  assert.deepEqual(result, [
+    { type: 'text', content: 'The conference ' },
+    { type: 'paren', content: [{ type: 'text', content: 'scheduled for next week' }] },
+    { type: 'text', content: ' will be online.' },
+  ]);
+
   assert.ok(hasDelimiterType(result, 'paren'));
   assert.equal(serialize(result), text);
 });
@@ -44,6 +60,14 @@ test('parse English text with parentheses', () => {
 test('parse English text with brackets', () => {
   const text = 'According to the report [see page 42], the results were positive.';
   const result = parse(text);
+
+  // Verify exact parsed structure
+  assert.deepEqual(result, [
+    { type: 'text', content: 'According to the report ' },
+    { type: 'square', content: [{ type: 'text', content: 'see page 42' }] },
+    { type: 'text', content: ', the results were positive.' },
+  ]);
+
   assert.ok(hasDelimiterType(result, 'square'));
   assert.equal(serialize(result), text);
 });
@@ -151,6 +175,16 @@ test('parse Chinese text (Pinyin) with quotes', () => {
 test('parse academic text with citations', () => {
   const text = 'The study [Smith et al., 2020] found that performance (measured in ms) improved.';
   const result = parse(text);
+
+  // Verify exact parsed structure
+  assert.deepEqual(result, [
+    { type: 'text', content: 'The study ' },
+    { type: 'square', content: [{ type: 'text', content: 'Smith et al., 2020' }] },
+    { type: 'text', content: ' found that performance ' },
+    { type: 'paren', content: [{ type: 'text', content: 'measured in ms' }] },
+    { type: 'text', content: ' improved.' },
+  ]);
+
   assert.ok(hasDelimiterType(result, 'square'));
   assert.ok(hasDelimiterType(result, 'paren'));
   assert.equal(serialize(result), text);
@@ -160,6 +194,18 @@ test('parse academic text with citations', () => {
 test('parse mathematical text', () => {
   const text = 'The formula is f(x) = [a + b] * {c - d}.';
   const result = parse(text);
+
+  // Verify exact parsed structure
+  assert.deepEqual(result, [
+    { type: 'text', content: 'The formula is f' },
+    { type: 'paren', content: [{ type: 'text', content: 'x' }] },
+    { type: 'text', content: ' = ' },
+    { type: 'square', content: [{ type: 'text', content: 'a + b' }] },
+    { type: 'text', content: ' * ' },
+    { type: 'curly', content: [{ type: 'text', content: 'c - d' }] },
+    { type: 'text', content: '.' },
+  ]);
+
   assert.ok(hasDelimiterType(result, 'paren'));
   assert.ok(hasDelimiterType(result, 'square'));
   assert.ok(hasDelimiterType(result, 'curly'));

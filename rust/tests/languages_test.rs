@@ -1,9 +1,14 @@
 //! Tests for meta-notation with various programming languages
+//!
+//! Each test verifies:
+//! 1. The expected delimiter types are found in the parsed result
+//! 2. Round-trip serialization preserves the original text
+//! 3. Key tests include full expected parsed object structure verification
 
-use meta_notation::{parse, serialize, DelimiterType};
+use meta_notation::{parse, serialize, Block, DelimiterType};
 
 // Helper function to check if a delimiter type exists anywhere in the parsed result
-fn has_delimiter_type(blocks: &[meta_notation::Block], dtype: &DelimiterType) -> bool {
+fn has_delimiter_type(blocks: &[Block], dtype: &DelimiterType) -> bool {
     blocks.iter().any(|b| b.has_delimiter_type(dtype))
 }
 
@@ -11,7 +16,23 @@ fn has_delimiter_type(blocks: &[meta_notation::Block], dtype: &DelimiterType) ->
 fn test_parse_javascript_code() {
     let code = "const greet = (name) => { return `Hello, ${name}!`; };";
     let result = parse(code);
-    assert!(result.len() > 0);
+
+    // Verify exact parsed structure
+    assert_eq!(
+        result,
+        vec![
+            Block::Text("const greet = ".to_string()),
+            Block::Paren(vec![Block::Text("name".to_string())]),
+            Block::Text(" => ".to_string()),
+            Block::Curly(vec![
+                Block::Text(" return ".to_string()),
+                Block::Backtick("Hello, ${name}!".to_string()),
+                Block::Text("; ".to_string()),
+            ]),
+            Block::Text(";".to_string()),
+        ]
+    );
+
     assert!(has_delimiter_type(&result, &DelimiterType::Paren));
     assert!(has_delimiter_type(&result, &DelimiterType::Curly));
     assert!(has_delimiter_type(&result, &DelimiterType::Backtick));
@@ -22,6 +43,24 @@ fn test_parse_javascript_code() {
 fn test_parse_python_code() {
     let code = r#"def calculate(x, y): return {"sum": x + y, "list": [x, y]}"#;
     let result = parse(code);
+
+    // Verify exact parsed structure
+    assert_eq!(
+        result,
+        vec![
+            Block::Text("def calculate".to_string()),
+            Block::Paren(vec![Block::Text("x, y".to_string())]),
+            Block::Text(": return ".to_string()),
+            Block::Curly(vec![
+                Block::DoubleQuote("sum".to_string()),
+                Block::Text(": x + y, ".to_string()),
+                Block::DoubleQuote("list".to_string()),
+                Block::Text(": ".to_string()),
+                Block::Square(vec![Block::Text("x, y".to_string())]),
+            ]),
+        ]
+    );
+
     assert!(has_delimiter_type(&result, &DelimiterType::Paren));
     assert!(has_delimiter_type(&result, &DelimiterType::Curly));
     assert!(has_delimiter_type(&result, &DelimiterType::Square));
@@ -33,6 +72,22 @@ fn test_parse_python_code() {
 fn test_parse_go_code() {
     let code = r#"func main() { fmt.Println("Hello, World!") }"#;
     let result = parse(code);
+
+    // Verify exact parsed structure
+    assert_eq!(
+        result,
+        vec![
+            Block::Text("func main".to_string()),
+            Block::Paren(vec![]),
+            Block::Text(" ".to_string()),
+            Block::Curly(vec![
+                Block::Text(" fmt.Println".to_string()),
+                Block::Paren(vec![Block::DoubleQuote("Hello, World!".to_string())]),
+                Block::Text(" ".to_string()),
+            ]),
+        ]
+    );
+
     assert!(has_delimiter_type(&result, &DelimiterType::Paren));
     assert!(has_delimiter_type(&result, &DelimiterType::Curly));
     assert!(has_delimiter_type(&result, &DelimiterType::DoubleQuote));
@@ -224,6 +279,27 @@ fn test_parse_sql_code() {
 fn test_parse_json() {
     let code = r#"{"name": "John", "age": 30, "tags": ["developer", "designer"]}"#;
     let result = parse(code);
+
+    // Verify exact parsed structure
+    assert_eq!(
+        result,
+        vec![Block::Curly(vec![
+            Block::DoubleQuote("name".to_string()),
+            Block::Text(": ".to_string()),
+            Block::DoubleQuote("John".to_string()),
+            Block::Text(", ".to_string()),
+            Block::DoubleQuote("age".to_string()),
+            Block::Text(": 30, ".to_string()),
+            Block::DoubleQuote("tags".to_string()),
+            Block::Text(": ".to_string()),
+            Block::Square(vec![
+                Block::DoubleQuote("developer".to_string()),
+                Block::Text(", ".to_string()),
+                Block::DoubleQuote("designer".to_string()),
+            ]),
+        ])]
+    );
+
     assert!(has_delimiter_type(&result, &DelimiterType::Curly));
     assert!(has_delimiter_type(&result, &DelimiterType::Square));
     assert!(has_delimiter_type(&result, &DelimiterType::DoubleQuote));

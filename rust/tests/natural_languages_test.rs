@@ -15,6 +15,17 @@ fn has_delimiter_type(blocks: &[Block], dtype: &DelimiterType) -> bool {
 fn test_parse_english_text_with_quotes() {
     let text = r#"She said, "Hello, world!" and smiled."#;
     let result = parse(text);
+
+    // Verify exact parsed structure
+    assert_eq!(
+        result,
+        vec![
+            Block::Text("She said, ".to_string()),
+            Block::DoubleQuote("Hello, world!".to_string()),
+            Block::Text(" and smiled.".to_string()),
+        ]
+    );
+
     assert!(has_delimiter_type(&result, &DelimiterType::DoubleQuote));
     assert_eq!(serialize(&result), text);
 }
@@ -23,6 +34,17 @@ fn test_parse_english_text_with_quotes() {
 fn test_parse_english_text_with_parentheses() {
     let text = "The conference (scheduled for next week) will be online.";
     let result = parse(text);
+
+    // Verify exact parsed structure
+    assert_eq!(
+        result,
+        vec![
+            Block::Text("The conference ".to_string()),
+            Block::Paren(vec![Block::Text("scheduled for next week".to_string())]),
+            Block::Text(" will be online.".to_string()),
+        ]
+    );
+
     assert!(has_delimiter_type(&result, &DelimiterType::Paren));
     assert_eq!(serialize(&result), text);
 }
@@ -31,6 +53,17 @@ fn test_parse_english_text_with_parentheses() {
 fn test_parse_english_text_with_brackets() {
     let text = "According to the report [see page 42], the results were positive.";
     let result = parse(text);
+
+    // Verify exact parsed structure
+    assert_eq!(
+        result,
+        vec![
+            Block::Text("According to the report ".to_string()),
+            Block::Square(vec![Block::Text("see page 42".to_string())]),
+            Block::Text(", the results were positive.".to_string()),
+        ]
+    );
+
     assert!(has_delimiter_type(&result, &DelimiterType::Square));
     assert_eq!(serialize(&result), text);
 }
@@ -147,6 +180,19 @@ fn test_parse_chinese_text_pinyin_with_quotes() {
 fn test_parse_academic_text_with_citations() {
     let text = "The study [Smith et al., 2020] found that performance (measured in ms) improved.";
     let result = parse(text);
+
+    // Verify exact parsed structure
+    assert_eq!(
+        result,
+        vec![
+            Block::Text("The study ".to_string()),
+            Block::Square(vec![Block::Text("Smith et al., 2020".to_string())]),
+            Block::Text(" found that performance ".to_string()),
+            Block::Paren(vec![Block::Text("measured in ms".to_string())]),
+            Block::Text(" improved.".to_string()),
+        ]
+    );
+
     assert!(has_delimiter_type(&result, &DelimiterType::Square));
     assert!(has_delimiter_type(&result, &DelimiterType::Paren));
     assert_eq!(serialize(&result), text);
@@ -156,6 +202,21 @@ fn test_parse_academic_text_with_citations() {
 fn test_parse_mathematical_text() {
     let text = "The formula is f(x) = [a + b] * {c - d}.";
     let result = parse(text);
+
+    // Verify exact parsed structure
+    assert_eq!(
+        result,
+        vec![
+            Block::Text("The formula is f".to_string()),
+            Block::Paren(vec![Block::Text("x".to_string())]),
+            Block::Text(" = ".to_string()),
+            Block::Square(vec![Block::Text("a + b".to_string())]),
+            Block::Text(" * ".to_string()),
+            Block::Curly(vec![Block::Text("c - d".to_string())]),
+            Block::Text(".".to_string()),
+        ]
+    );
+
     assert!(has_delimiter_type(&result, &DelimiterType::Paren));
     assert!(has_delimiter_type(&result, &DelimiterType::Square));
     assert!(has_delimiter_type(&result, &DelimiterType::Curly));
