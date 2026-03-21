@@ -14,28 +14,19 @@ fn test_parse_plain_text() {
 #[test]
 fn test_parse_parentheses() {
     let result = parse("(hello)");
-    assert_eq!(
-        result,
-        vec![Block::Paren(vec![Block::Text("hello".to_string())])]
-    );
+    assert_eq!(result, vec![Block::Paren(vec![Block::Text("hello".to_string())])]);
 }
 
 #[test]
 fn test_parse_curly_braces() {
     let result = parse("{world}");
-    assert_eq!(
-        result,
-        vec![Block::Curly(vec![Block::Text("world".to_string())])]
-    );
+    assert_eq!(result, vec![Block::Curly(vec![Block::Text("world".to_string())])]);
 }
 
 #[test]
 fn test_parse_square_brackets() {
     let result = parse("[test]");
-    assert_eq!(
-        result,
-        vec![Block::Square(vec![Block::Text("test".to_string())])]
-    );
+    assert_eq!(result, vec![Block::Square(vec![Block::Text("test".to_string())])]);
 }
 
 #[test]
@@ -105,17 +96,18 @@ fn test_parse_empty_delimiters() {
     let result = parse("(){}[]");
     assert_eq!(
         result,
-        vec![Block::Paren(vec![]), Block::Curly(vec![]), Block::Square(vec![]),]
+        vec![
+            Block::Paren(vec![]),
+            Block::Curly(vec![]),
+            Block::Square(vec![]),
+        ]
     );
 }
 
 #[test]
 fn test_parse_quotes_with_special_chars() {
     let result = parse("\"hello {world}\"");
-    assert_eq!(
-        result,
-        vec![Block::DoubleQuote("hello {world}".to_string())]
-    );
+    assert_eq!(result, vec![Block::DoubleQuote("hello {world}".to_string())]);
 }
 
 #[test]
