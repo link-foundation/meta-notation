@@ -165,6 +165,14 @@ cargo build --release
 cargo test
 ```
 
+92 test cases covering:
+- **Parser tests** (15 tests): Each delimiter type, mixed delimiters, nested structures, empty delimiters, quotes with special characters, JavaScript/Python/JSON-like code structures, with exact expected parsed object verification
+- **Serializer tests** (10 tests): Serialization of each delimiter type, round-trip consistency
+- **Programming language tests** (26 tests): 25+ languages with delimiter type and round-trip verification, key tests include full expected parsed object structure
+- **Natural language tests** (30 tests): English, Spanish, French, German, Italian, Portuguese, Russian, Japanese, Chinese text, academic citations, mathematical expressions, legal text, and more
+- **Unit tests** (9 tests): Internal parser tests in lib.rs
+- **Doc tests** (2 tests): Examples in documentation
+
 ## Publishing
 
 Publishing runs from `.github/workflows/publish-rust.yml` when a GitHub release
@@ -196,14 +204,6 @@ python -m unittest discover -s experiments -p 'test_*.py' -v
 ```
 
 Run these commands from the repository root.
-
-92 test cases covering:
-- **Parser tests** (15 tests): Each delimiter type, mixed delimiters, nested structures, empty delimiters, quotes with special characters, JavaScript/Python/JSON-like code structures, with exact expected parsed object verification
-- **Serializer tests** (10 tests): Serialization of each delimiter type, round-trip consistency
-- **Programming language tests** (26 tests): 25+ languages with delimiter type and round-trip verification, key tests include full expected parsed object structure
-- **Natural language tests** (30 tests): English, Spanish, French, German, Italian, Portuguese, Russian, Japanese, Chinese text, academic citations, mathematical expressions, legal text, and more
-- **Unit tests** (9 tests): Internal parser tests in lib.rs
-- **Doc tests** (2 tests): Examples in documentation
 
 ## Features
 
