@@ -1,4 +1,5 @@
 # Build outputs
+__pycache__/
 js/dist/
 js/src/**/*.js
 js/src/**/*.js.map

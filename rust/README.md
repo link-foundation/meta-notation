@@ -173,6 +173,38 @@ cargo test
 - **Unit tests** (9 tests): Internal parser tests in lib.rs
 - **Doc tests** (2 tests): Examples in documentation
 
+## Publishing
+
+Publishing runs from `.github/workflows/publish-rust.yml` when a GitHub release
+is published. The workflow first requests a short-lived crates.io token using
+[trusted publishing](https://crates.io/docs/trusted-publishing). If authentication
+is unavailable, it uses the repository secret `CARGO_REGISTRY_TOKEN`, then
+`CARGO_TOKEN`. Keep these secrets available as fallbacks. Tokens are passed to
+Cargo through its environment, never through command arguments.
+
+For the first publication, a crate owner must configure a crates.io API token
+with permission to publish `meta-notation` as one of those repository secrets.
+After the crate exists, register a GitHub trusted publisher in its crates.io
+settings with owner `link-foundation`, repository `meta-notation`, and workflow
+`publish-rust.yml`. No GitHub environment is configured by this workflow.
+See the [authentication action](https://github.com/rust-lang/crates-io-auth-action)
+for token handling and automatic revocation of its temporary token.
+
+Update `rust/Cargo.toml` to an unpublished version before creating a release.
+The workflow fails with an actionable error if no credential is available,
+and fails if Cargo rejects the publication. A failed OIDC authentication step
+alone does not fail the job when a fallback token allows publishing to succeed.
+
+CI validates workflow syntax with actionlint and tests authentication priority,
+missing credentials, and Cargo failures without contacting crates.io:
+
+```bash
+python -m pip install PyYAML==6.0.3
+python -m unittest discover -s experiments -p 'test_*.py' -v
+```
+
+Run these commands from the repository root.
+
 ## Features
 
 - **Universal Delimiter Parsing**: Parses `()`, `{}`, `[]`, `''`, `""`, `` ` ` ``
