@@ -144,6 +144,48 @@ npm test
 - **Programming language tests**: 25+ languages with delimiter type and round-trip verification, key tests include full expected parsed object structure
 - **Natural language tests**: 25 tests for English, Spanish, French, German, Italian, Portuguese, Russian, Japanese, Chinese text, academic citations, mathematical expressions, legal text, and more
 
+## Publishing to npm
+
+Published GitHub releases run `.github/workflows/publish-npm.yml` on a
+GitHub-hosted runner with Node 24 and npm 11.20.0. Normal releases use npm
+trusted publishing (OIDC), with `id-token: write` and no npm token secret.
+Publish failures fail the job. Version 0.1.1 is prepared for the next release;
+0.1.0 is already on npm and cannot be republished.
+
+Before releasing, a package owner must attach the trusted publisher using an
+authenticated npm CLI with support for `npm trust`:
+
+```bash
+npm trust github meta-notation --repo link-foundation/meta-notation --file publish-npm.yml --allow-publish --yes
+npm trust list meta-notation
+```
+
+Alternatively, configure the publisher in the package settings on npmjs.com:
+organization `link-foundation`, repository `meta-notation`, workflow filename
+`publish-npm.yml`, no environment, with permission to publish directly. This
+account operation requires package write access and npm authentication; GitHub
+repository access alone cannot configure it. See the
+[npm trusted publishing documentation](https://docs.npmjs.com/trusted-publishers/).
+
+After configuration, publish a GitHub release for the intended version and check
+that the **Publish to npm** step succeeds while **Publish with token fallback**
+is skipped. Confirm the published version and provenance on npm. A dry run or
+passing workflow unit tests do not verify the registry trust relationship.
+
+For an emergency fallback, create a fresh, short-lived granular npm token with
+package write access and the required publishing permissions, store it as the
+`NPM_TOKEN` repository secret, and manually dispatch **Publish to npm** at the
+intended release tag with `use_token` selected. Only this explicit path receives
+the secret; an OIDC failure never automatically retries with a token. Remove or
+rotate the fallback secret after use. Do not reuse the bootstrap token.
+
+Workflow regression tests run in CI and can be run locally from the repository
+root with PyYAML installed:
+
+```bash
+python -m unittest discover -s experiments -p 'test_*.py' -v
+```
+
 ## Features
 
 - **Universal Delimiter Parsing**: Parses `()`, `{}`, `[]`, `''`, `""`, `` ` ` ``
