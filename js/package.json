@@ -1,6 +1,6 @@
 {
   "name": "meta-notation",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A notation for the largest possible set of languages, focusing on parsing common delimiters",
   "type": "module",
   "main": "dist/src/index.js",
@@ -33,5 +33,10 @@
   ],
   "dependencies": {
     "test-anywhere": "^0.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/link-foundation/meta-notation.git",
+    "directory": "js"
   }
 }

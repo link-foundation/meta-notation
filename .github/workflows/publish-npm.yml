@@ -3,21 +3,34 @@ name: Publish to npm
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      use_token:
+        description: 'Use a rotated NPM_TOKEN for an emergency release instead of OIDC'
+        type: boolean
+        default: false
 
 jobs:
   publish-npm:
     name: Publish to npm
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
           cache: 'npm'
           cache-dependency-path: js/package-lock.json
+
+      - name: Install npm CLI
+        run: npm install --global npm@11.20.0
 
       - name: Install dependencies
         working-directory: js
@@ -28,8 +41,18 @@ jobs:
         run: npm run build
 
       - name: Publish to npm
+        if: ${{ !inputs.use_token }}
         working-directory: js
         run: npm publish
+
+      - name: Publish with token fallback
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.use_token }}
+        working-directory: js
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::Token fallback was selected. Configure a rotated NPM_TOKEN repository secret or retry with OIDC."
+            exit 1
+          fi
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        continue-on-error: true
